@@ -93,13 +93,13 @@ class App(customtkinter.CTk):
             kit1.motor1.throttle = 1
             kit2.motor1.throttle = 1
         elif button == "S":
-            kit1.motor1.throttle = 0
-            kit2.motor1.throttle = 0
+            kit1.motor1.throttle = -1
+            kit2.motor1.throttle = -1
 
         print(f"{button} Pressed")
 
     def motion_event_stop(self, event, button):
-        if button == "W":
+        if button != "W":
             kit1.motor1.throttle = 0
             kit2.motor1.throttle = 0
 
