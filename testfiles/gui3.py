@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 from picamera import PiCamera
 
 from time import sleep
-import pygame
+
 import os
 
 kit1 = MotorKit()
@@ -64,8 +64,10 @@ class App(customtkinter.CTk):
         self.button_right.bind('<ButtonPress-1>', lambda x: self.motion_event_start(x, 'D'))
         self.button_right.bind('<ButtonRelease-1>', lambda x: self.motion_event_stop(x,'D'))
 
-        self.button_stop = customtkinter.CTkButton(self.sidebar_frame, text="Stop", height=10, width=10)
-        self.button_stop.grid(row=2, column=1, padx=10, pady=10, ipadx=10, ipady=10)
+        self.button_led = customtkinter.CTkButton(self.sidebar_frame, text="LED ligths", height=10, width=10)
+        self.button_led.grid(row=3, column=1, padx=10, pady=10, ipadx=10, ipady=10)
+
+
 
         # create Video Canvas
         self.picam = customtkinter.CTkCanvas(self, width=800, background="gray")
@@ -100,6 +102,8 @@ class App(customtkinter.CTk):
 
     def motion_event_stop(self, event, button):
         print(f"{button} Released")
+        kit1.motor1.throttle = 0
+        kit2.motor1.throttle = 0
 
 
 if __name__ == "__main__":
