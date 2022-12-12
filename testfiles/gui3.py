@@ -1,6 +1,20 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
+import board
+from adafruit_motorkit import MotorKit
+import RPi.GPIO as GPIO
+from picamera import PiCamera
+
+from time import sleep
+import pygame
+import os
+
+kit1 = MotorKit()
+kit2 = MotorKit(address=0x61)
+
+kit1.motor1.throttle = 0
+kit2.motor1.throttle = 0
 
 # Setting up theme
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -75,9 +89,19 @@ class App(customtkinter.CTk):
             self.motion_event_stop(event, event.char.upper())
 
     def motion_event_start(self, event, button):
+        if button == "W":
+            kit1.motor1.throttle = 1
+            kit2.motor1.throttle = 1
+            print("yes it is")
+
         print(f"{button} Pressed")
 
     def motion_event_stop(self, event, button):
+        if button == "W":
+            kit1.motor1.throttle = 0
+            kit2.motor1.throttle = 0
+
+
         print(f"{button} Released")
 
 
