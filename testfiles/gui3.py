@@ -99,11 +99,6 @@ class App(customtkinter.CTk):
         print(f"{button} Pressed")
 
     def motion_event_stop(self, event, button):
-        if button != "W":
-            kit1.motor1.throttle = 0
-            kit2.motor1.throttle = 0
-
-
         print(f"{button} Released")
 
 
