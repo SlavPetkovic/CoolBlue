@@ -92,7 +92,9 @@ class App(customtkinter.CTk):
         if button == "W":
             kit1.motor1.throttle = 1
             kit2.motor1.throttle = 1
-            print("yes it is")
+        elif button == "S":
+            kit1.motor1.throttle = 0
+            kit2.motor1.throttle = 0
 
         print(f"{button} Pressed")
 
