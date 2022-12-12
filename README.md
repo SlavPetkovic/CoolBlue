@@ -63,7 +63,7 @@ git clone ....
 
 ```
 python3 -m venv coolblue
-source CoolBlue/bin/activate
+source coolblue/bin/activate
 ```
 
 * Installing all libraries in the project:
@@ -78,7 +78,6 @@ sudo pip3 install multiprocess
 sudo pip3 install picamera
 sudo pip3 install pygames
 sudo apt install python3-picamera
-pip install pygame
 ```
 
 * Installing sqlitebrowser
