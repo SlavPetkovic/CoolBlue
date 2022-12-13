@@ -1,7 +1,6 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-
 import board
 from adafruit_motorkit import MotorKit
 import RPi.GPIO as GPIO
@@ -9,27 +8,25 @@ from picamera import PiCamera
 from time import sleep
 import os
 
+
+# Setting up Motors
 kit1 = MotorKit()
 kit2 = MotorKit(address=0x61)
 kit1.motor1.throttle = 0
 kit2.motor1.throttle = 0
 
+# Setting up relays to control LED and main lights
 rc1 = 23
 rc2 = 24
-
 GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(rc1, GPIO.OUT)
 GPIO.setup(rc2, GPIO.OUT)
-
-
 GPIO.output(rc1, True)
 GPIO.output(rc2, True)
 
 
-
-
-# Setting up theme
+# Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
@@ -105,67 +102,55 @@ class App(customtkinter.CTk):
         # Arm Down
         self.button_arm_down = customtkinter.CTkButton(self.arm_control, text=" Down", height=10, width=10)
         self.button_arm_down.grid(row=2, column=0, padx=10, pady=10, ipadx=30, ipady=10)
-
+        # Grip Open
         self.button_grip_open = customtkinter.CTkButton(self.arm_control, text="Open", height=10, width=10)
         self.button_grip_open.grid(row=1, column=1, padx=10, pady=10, ipadx=30, ipady=10, sticky="w")
-
+        # Grip Closed
         self.button_grip_close = customtkinter.CTkButton(self.arm_control, text="Close", height=10, width=10)
         self.button_grip_close.grid(row=2, column=1, padx=10, pady=10, ipadx=30, ipady=10, sticky="w")
 
 
         ###################################################################
-        # Create Sidebar for grip
+        # Create Sidebar for LED, LIghts and Camera controls
         ###################################################################
         self.lights_control = customtkinter.CTkFrame(self)
         self.lights_control.grid(row=3, column=0, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nsew")
         self.lights_control.grid_rowconfigure(1, weight=1)
 
-        # # Setting up LED label
-        # self.led_label = customtkinter.CTkLabel(self.lights_control, text="LED",  font=customtkinter.CTkFont(size=15, weight="bold"))
-        # self.led_label.grid(row=0, column=0, padx=20, pady=(10, 10))
-
         # LED  Lights
         self.led_switch = customtkinter.CTkSwitch(master=self.lights_control, text="LED", command=self.led_switch)
         self.led_switch.grid(row=0, column=1, pady=10, padx=20, sticky="n")
 
-
-        # # Setting up regular lights label
-        # self.regular_ligths_label = customtkinter.CTkLabel(self.lights_control, text="Lights",  font=customtkinter.CTkFont(size=15, weight="bold"))
-        # self.regular_ligths_label.grid(row=1, column=0, padx=20, pady=(10, 10))
-
         # Regular Lights
-        self.regular_ligths_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Lights", command=lambda: print("switch 1 toggle"))
+        self.regular_ligths_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Lights", command=self.lights_control)
         self.regular_ligths_switch.grid(row=1, column=1, pady=10, padx=20)
 
-
-        # # Setting up Camera Label
-        # self.camera_label = customtkinter.CTkLabel(self.lights_control, text="Camera",  font=customtkinter.CTkFont(size=15, weight="bold"))
-        # self.camera_label.grid(row=2, column=0, padx=20, pady=(10, 10))
-
         # Camera
-        self.led_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Camera", command=lambda: print("switch 1 toggle"))
-        self.led_switch.grid(row=2, column=1, pady=10, padx=20, )
+        self.camera_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Camera", command=lambda: print("switch 1 toggle"))
+        self.camera_switch.grid(row=2, column=1, pady=10, padx=20, )
 
 
-
-        # create Video Canvas
+        ###################################################################
+        # Create canvas for RPCam live stream
+        ###################################################################
         self.picam = customtkinter.CTkCanvas(self, width=800, background="gray")
         self.picam.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(20, 20), sticky="nsew")
         self.picam.grid_rowconfigure(4, weight=1)
 
+        # picam label
         self.picam_label = customtkinter.CTkLabel(master=self.picam, text="Live Stream", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.picam_label.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
 
 
-
+        ###################################################################
+        # Create sidebar grid for Temperature, Pressure, Humidity and Luminosity
+        ###################################################################
         # create radiobutton frame
         self.temperature = customtkinter.CTkFrame(self)
         self.temperature.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.temperature.grid_rowconfigure(2, weight=1)
         self.label_temperature = customtkinter.CTkLabel(master=self.temperature, text="Temperature")
         self.label_temperature.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
-
-
 
         # create checkbox and switch frame
         self.pressure = customtkinter.CTkFrame(self)
@@ -213,20 +198,33 @@ class App(customtkinter.CTk):
         kit2.motor1.throttle = 0
 
     #########################################################################
-    # Switch
+    # LED Switch
     #########################################################################
 
     def led_switch(self, event=None):
         if self.is_on:
-            print("It is on")
+            print("LED on")
             GPIO.output(rc1, False)
+            self.is_on = False
+        else:
+            print("LED off")
+            GPIO.output(rc1, True)
+            self.is_on = True
+
+    #########################################################################
+    # Lights Switch
+    #########################################################################
+
+    def lights_switch(self, event=None):
+        if self.is_on:
+            print("Lights on")
             GPIO.output(rc2, False)
             self.is_on = False
         else:
-            print("It is off")
-            GPIO.output(rc1, True)
+            print("Lights off")
             GPIO.output(rc2, True)
             self.is_on = True
+
 
 if __name__ == "__main__":
     app = App()
