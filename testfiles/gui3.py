@@ -122,11 +122,11 @@ class App(customtkinter.CTk):
         self.led_switch.grid(row=0, column=1, pady=10, padx=20, sticky="n")
 
         # Regular Lights
-        self.regular_ligths_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Lights", command=self.lights_control)
-        self.regular_ligths_switch.grid(row=1, column=1, pady=10, padx=20)
+        self.lights_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Lights", command=self.lights_switch)
+        self.lights_switch.grid(row=1, column=1, pady=10, padx=20)
 
         # Camera
-        self.camera_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Camera", command=lambda: print("switch 1 toggle"))
+        self.camera_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Camera", command=self.camera_switch)
         self.camera_switch.grid(row=2, column=1, pady=10, padx=20, )
 
 
@@ -223,6 +223,23 @@ class App(customtkinter.CTk):
         else:
             print("Lights off")
             GPIO.output(rc2, True)
+            self.is_on = True
+
+    #########################################################################
+    # Camera Switch
+    #########################################################################
+    def camera_switch(self, event=None):
+        camera = PiCamera()
+        if self.is_on:
+            camera.start_preview()
+            print("Cam on")
+
+            self.is_on = False
+        else:
+            print("Cam off")
+            camera.stop_preview()
+            camera.close()
+
             self.is_on = True
 
 
