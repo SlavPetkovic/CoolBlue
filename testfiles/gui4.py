@@ -50,7 +50,7 @@ class App(customtkinter.CTk):
 
     def current(self):
             while True:
-                TEMPERATURE = round(bme680.temperature, 1)
+                TEMPERATURE = round(bme680.temperature, 2)
                 print(f'{TEMPERATURE}')
             return TEMPERATURE
 
