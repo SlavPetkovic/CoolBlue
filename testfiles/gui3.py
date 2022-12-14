@@ -1,44 +1,44 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-import board
-from adafruit_motorkit import MotorKit
-import RPi.GPIO as GPIO
-from picamera import PiCamera
-from time import sleep
-import os
-import time
-from busio import I2C
-import adafruit_bme680
-import datetime
-import adafruit_veml7700
+# import board
+# from adafruit_motorkit import MotorKit
+# import RPi.GPIO as GPIO
+# from picamera import PiCamera
+# from time import sleep
+# import os
+# import time
+# from busio import I2C
+# import adafruit_bme680
+# import datetime
+# import adafruit_veml7700
+#
+#
+# # Setting up Motors
+# kit1 = MotorKit()
+# kit2 = MotorKit(address=0x61)
+# kit1.motor1.throttle = 0
+# kit2.motor1.throttle = 0
+#
+# # Setting up relays to control LED and main lights
+# rc1 = 23
+# rc2 = 24
+# GPIO.setwarnings(True)
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(rc1, GPIO.OUT)
+# GPIO.setup(rc2, GPIO.OUT)
+# GPIO.output(rc1, True)
+# GPIO.output(rc2, True)
 
 
-# Setting up Motors
-kit1 = MotorKit()
-kit2 = MotorKit(address=0x61)
-kit1.motor1.throttle = 0
-kit2.motor1.throttle = 0
-
-# Setting up relays to control LED and main lights
-rc1 = 23
-rc2 = 24
-GPIO.setwarnings(True)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(rc1, GPIO.OUT)
-GPIO.setup(rc2, GPIO.OUT)
-GPIO.output(rc1, True)
-GPIO.output(rc2, True)
-
-
-# Sensors
-i2c = board.I2C()  # uses board.SCL and board.SDA
-veml7700 = adafruit_veml7700.VEML7700(i2c)
-# Create library object using our Bus I2C port
-i2c = I2C(board.SCL, board.SDA)
-bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
-# change this to match the location's pressure (hPa) at sea level
-bme680.sea_level_pressure = 1013.25
+# # Sensors
+# i2c = board.I2C()  # uses board.SCL and board.SDA
+# veml7700 = adafruit_veml7700.VEML7700(i2c)
+# # Create library object using our Bus I2C port
+# i2c = I2C(board.SCL, board.SDA)
+# bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+# # change this to match the location's pressure (hPa) at sea level
+# bme680.sea_level_pressure = 1013.25
 
 # Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -50,8 +50,8 @@ class App(customtkinter.CTk):
 
         # configure window
         self.is_on = True
-        self.temperature = tkinter.StringVar()
-        self.temperature.set(50)
+        self.temperature = tkinter.IntVar()
+
         #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
 
         self.title("Cool Blue")
@@ -163,7 +163,7 @@ class App(customtkinter.CTk):
         ###################################################################
         # Create sidebar grid for Temperature, Pressure, Humidity and Luminosity
         ###################################################################
-        # create radiobutton frame
+        # create frame for environmental variable
         self.temperature_frame = customtkinter.CTkFrame(self)
         self.temperature_frame.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.temperature_frame.grid_rowconfigure(2, weight=1)
@@ -283,15 +283,21 @@ class App(customtkinter.CTk):
     #########################################################################
     # Sensor Data
     #########################################################################
-    def sensors(self):
+    def counter(self):
+        import time
+        i = 0
         while True:
-            # Create the now variable to capture the current moment
-            now = datetime.datetime.now()
-            TIMESTAMP = (now)
-            self.temperature = round(bme680.temperature, 2)
-
+            start = round(time.time(), 0)
             time.sleep(1)
-            print(f"{self.temperature}")
+            stop = round(time.time(), 0)
+            j = stop - start
+            i = i + j
+            #self.temperature = i
+            print(i)
+        return i
+
+        self.temperature = counter(self)
+
 
 
 
