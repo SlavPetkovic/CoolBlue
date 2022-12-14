@@ -210,15 +210,15 @@ class App(customtkinter.CTk):
         current_temp, current_pres, current_hum = self.current()
         self.temperature.set(current_temp)
         self.pressure.set(current_pres)
-        self.humidity.set(current_pres)
+        self.humidity.set(current_hum)
 
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
         while True:
             current_temp = round(bme680.temperature, 2)
-            current_pres = round(bme680.pressure, 2) * 0.030
-            current_hum =  round(bme680.humidity, 2)
+            current_pres = round(bme680.pressure, 2)
+            current_hum =  round(bme680.humidity * 0.030, 2)
             print(f'{current_temp}')
             return current_temp, current_pres, current_hum
 
