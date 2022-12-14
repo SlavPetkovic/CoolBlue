@@ -204,7 +204,6 @@ class App(customtkinter.CTk):
     def temp(self):
         current_temp, current_pres, = self.current()
         self.temperature.set(current_temp)
-        self.pressure.set(current_pres)
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
