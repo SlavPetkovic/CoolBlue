@@ -185,7 +185,7 @@ class App(customtkinter.CTk):
         self.label_pressure.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
 
         self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure, font=customtkinter.CTkFont(size=50, weight="bold"))
-        self.label_pressire_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
+        self.label_pressure_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
         self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, text = f'\N{DEGREE CELSIUS}', font=customtkinter.CTkFont(size=30, weight="bold"))
         self.label_pressure_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
