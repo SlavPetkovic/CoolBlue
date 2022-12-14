@@ -51,7 +51,7 @@ class App(customtkinter.CTk):
         # configure window
         self.is_on = True
         self.temperature = tkinter.IntVar()
-
+        self.pressure = tkinter.IntVar()
         #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
 
         self.title("Cool Blue")
@@ -167,6 +167,7 @@ class App(customtkinter.CTk):
         self.temperature_frame = customtkinter.CTkFrame(self)
         self.temperature_frame.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.temperature_frame.grid_rowconfigure(2, weight=1)
+
         self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text="Temperature")
         self.label_temperature.grid(row=0, column=2, columnspan=2, padx=10, pady=10, sticky="")
         self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame,
@@ -186,6 +187,9 @@ class App(customtkinter.CTk):
         self.pressure.grid_rowconfigure(1, weight=1)
         self.label_pressure = customtkinter.CTkLabel(master=self.pressure, text="Pressure")
         self.label_pressure.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+
+
+
 
         # create checkbox and switch frame
         self.humidity = customtkinter.CTkFrame(self)
@@ -283,20 +287,22 @@ class App(customtkinter.CTk):
     #########################################################################
     # Sensor Data
     #########################################################################
-    def counter(self):
-        import time
-        i = 0
-        while True:
-            start = round(time.time(), 0)
-            time.sleep(1)
-            stop = round(time.time(), 0)
-            j = stop - start
-            i = i + j
-            #self.temperature = i
-            print(i)
-        return i
+        self.temp()  # call the temp function just once
 
-        self.temperature = counter(self)
+    def temp(self):
+        current_temp, current_pres, = self.current()
+        self.temperature.set(current_temp)
+        self.pressure.set(current_pres)
+
+        # self.pressure.set(self.current())
+        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
+
+    def current(self):
+        while True:
+            current_temp = round(bme680.temperature, 2)
+            current_pres = round(bme680.pressure, 2)
+            print(f'{current_temp}')
+            return current_temp, current_pres
 
 
 
