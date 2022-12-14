@@ -170,15 +170,9 @@ class App(customtkinter.CTk):
 
         self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text="Temperature")
         self.label_temperature.grid(row=0, column=2, columnspan=2, padx=10, pady=10, sticky="")
-        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame,
-                                                              textvariable=self.temperature,
-                                                              font=customtkinter.CTkFont(size=50, weight="bold"))
-
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_temperature_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame,
-                                                              text = f'\N{DEGREE CELSIUS}',
-                                                              font=customtkinter.CTkFont(size=30, weight="bold"))
-
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, text = f'\N{DEGREE CELSIUS}', font=customtkinter.CTkFont(size=30, weight="bold"))
         self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
         # create checkbox and switch frame
@@ -204,6 +198,21 @@ class App(customtkinter.CTk):
         # self.luminosity.grid_rowconfigure(1, weight=1)
         # self.label_luminosity = customtkinter.CTkLabel(master=self.luminosity, text="Luminosity")
         # self.label_luminosity.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+
+        self.temp()  # call the temp function just once
+
+    def temp(self):
+        current_temp, current_pres, = self.current()
+        self.temperature.set(current_temp)
+        self.pressure.set(current_pres)
+        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
+
+    def current(self):
+        while True:
+            current_temp = round(bme680.temperature, 2)
+            current_pres = round(bme680.pressure, 2)
+            print(f'{current_temp}')
+            return current_temp, current_pres
 
 
     def key_pressed(self, event):
@@ -282,26 +291,6 @@ class App(customtkinter.CTk):
             # camera.close()
 
             self.is_on = True
-
-
-    #########################################################################
-    # Sensor Data
-    #########################################################################
-        self.temp()  # call the temp function just once
-
-    def temp(self):
-        current_temp, current_pres, = self.current()
-        self.temperature.set(current_temp)
-        self.pressure.set(current_pres)
-        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
-
-    def current(self):
-        while True:
-            current_temp = round(bme680.temperature, 2)
-            current_pres = round(bme680.pressure, 2)
-            print(f'{current_temp}, {current_pres}')
-            return current_temp, current_pres
-
 
 
 if __name__ == "__main__":
