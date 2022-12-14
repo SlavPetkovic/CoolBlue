@@ -43,17 +43,17 @@ class App(customtkinter.CTk):
             font=customtkinter.CTkFont(size=30, weight="bold"))
         self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
-    #     self.temp()  # call the temp function just once
-    #
-    # def temp(self):
-    #     self.temperature.set(self.current())
-    #     self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
-    #
-    # def current(self):
-    #         while True:
-    #             TEMPERATURE = round(bme680.temperature, 2)
-    #             print(f'{TEMPERATURE}')
-    #         return TEMPERATURE
+        self.temp()  # call the temp function just once
+
+    def temp(self):
+        self.temperature.set(self.current())
+        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
+
+    def current(self):
+            while True:
+                TEMPERATURE = round(bme680.temperature, 2)
+                print(f'{TEMPERATURE}')
+                return TEMPERATURE
 
 if __name__ == "__main__":
     app = App()
