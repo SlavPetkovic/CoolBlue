@@ -60,16 +60,20 @@ class App(customtkinter.CTk):
         self.temp()  # call the temp function just once
 
     def temp(self):
-        current_temp = self.current()
+        current_temp, current_pres = self.current()
         self.temperature.set(current_temp)
+        self.pressure.set(current_pres)
+
+
         #self.pressure.set(self.current())
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
             while True:
                 current_temp = round(bme680.temperature, 2)
+                current_pres = round(bme680.pressure, 2)
                 print(f'{current_temp}')
-                return current_temp
+                return current_temp, current_pres
 
 if __name__ == "__main__":
     app = App()
