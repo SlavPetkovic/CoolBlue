@@ -217,8 +217,8 @@ class App(customtkinter.CTk):
     def current(self):
         while True:
             current_temp = round(bme680.temperature, 2)
-            current_pres = round(bme680.pressure, 2)
-            current_hum =  round(bme680.humidity * 0.030, 2)
+            current_pres = round(bme680.pressure * 0.030, 2)
+            current_hum =  round(bme680.humidity, 2)
             print(f'{current_temp}')
             return current_temp, current_pres, current_hum
 
