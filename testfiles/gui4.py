@@ -2,14 +2,14 @@ import time
 import tkinter
 import customtkinter
 
-# import time
-# import board
-# from busio import I2C
-# import adafruit_bme680
-#
-# # Create library object using our Bus I2C port
-# i2c = I2C(board.SCL, board.SDA)
-# bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+import time
+import board
+from busio import I2C
+import adafruit_bme680
+
+# Create library object using our Bus I2C port
+i2c = I2C(board.SCL, board.SDA)
+bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
 # Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
