@@ -169,7 +169,7 @@ class App(customtkinter.CTk):
         self.temperature_frame.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.temperature_frame.grid_rowconfigure(2, weight=1)
 
-        self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text="Temperature")
+        self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text=f'Temperature \N{DEGREE CELSIUS}')
         self.label_temperature.grid(row=0, column=2, columnspan=2, padx=10, pady=10, sticky="")
         self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_temperature_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
