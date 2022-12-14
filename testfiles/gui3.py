@@ -1,44 +1,44 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-# import board
-# from adafruit_motorkit import MotorKit
-# import RPi.GPIO as GPIO
-# from picamera import PiCamera
-# from time import sleep
-# import os
-# import time
-# from busio import I2C
-# import adafruit_bme680
-# import datetime
-# import adafruit_veml7700
-#
-#
-# # Setting up Motors
-# kit1 = MotorKit()
-# kit2 = MotorKit(address=0x61)
-# kit1.motor1.throttle = 0
-# kit2.motor1.throttle = 0
-#
-# # Setting up relays to control LED and main lights
-# rc1 = 23
-# rc2 = 24
-# GPIO.setwarnings(True)
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(rc1, GPIO.OUT)
-# GPIO.setup(rc2, GPIO.OUT)
-# GPIO.output(rc1, True)
-# GPIO.output(rc2, True)
+import board
+from adafruit_motorkit import MotorKit
+import RPi.GPIO as GPIO
+from picamera import PiCamera
+from time import sleep
+import os
+import time
+from busio import I2C
+import adafruit_bme680
+import datetime
+import adafruit_veml7700
 
 
-# # Sensors
-# i2c = board.I2C()  # uses board.SCL and board.SDA
-# veml7700 = adafruit_veml7700.VEML7700(i2c)
-# # Create library object using our Bus I2C port
-# i2c = I2C(board.SCL, board.SDA)
-# bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
-# # change this to match the location's pressure (hPa) at sea level
-# bme680.sea_level_pressure = 1013.25
+# Setting up Motors
+kit1 = MotorKit()
+kit2 = MotorKit(address=0x61)
+kit1.motor1.throttle = 0
+kit2.motor1.throttle = 0
+
+# Setting up relays to control LED and main lights
+rc1 = 23
+rc2 = 24
+GPIO.setwarnings(True)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(rc1, GPIO.OUT)
+GPIO.setup(rc2, GPIO.OUT)
+GPIO.output(rc1, True)
+GPIO.output(rc2, True)
+
+
+# Sensors
+i2c = board.I2C()  # uses board.SCL and board.SDA
+veml7700 = adafruit_veml7700.VEML7700(i2c)
+# Create library object using our Bus I2C port
+i2c = I2C(board.SCL, board.SDA)
+bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+# change this to match the location's pressure (hPa) at sea level
+bme680.sea_level_pressure = 1013.25
 
 # Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -220,19 +220,19 @@ class App(customtkinter.CTk):
 
     def motion_event_start(self, event, button):
         if button == "W":
-            # kit1.motor1.throttle = 1
-            # kit2.motor1.throttle = 1
+            kit1.motor1.throttle = 1
+            kit2.motor1.throttle = 1
             print(f"{button} Pressed")
         elif button == "S":
-            # kit1.motor1.throttle = -1
-            # kit2.motor1.throttle = -1
+            kit1.motor1.throttle = -1
+            kit2.motor1.throttle = -1
 
             print(f"{button} Pressed")
 
     def motion_event_stop(self, event, button):
         print(f"{button} Released")
-        # kit1.motor1.throttle = 0
-        # kit2.motor1.throttle = 0
+        kit1.motor1.throttle = 0
+        kit2.motor1.throttle = 0
 
     #########################################################################
     # LED Switch
