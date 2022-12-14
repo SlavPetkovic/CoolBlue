@@ -6,6 +6,7 @@ import time
 import board
 from busio import I2C
 import adafruit_bme680
+
 # Create library object using our Bus I2C port
 i2c = I2C(board.SCL, board.SDA)
 bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
@@ -42,17 +43,17 @@ class App(customtkinter.CTk):
             font=customtkinter.CTkFont(size=30, weight="bold"))
         self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
-        self.temp()  # call the temp function just once
-
-    def temp(self):
-        self.temperature.set(self.current())
-        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
-
-    def current(self):
-            while True:
-                TEMPERATURE = round(bme680.temperature, 2)
-                print(f'{TEMPERATURE}')
-            return TEMPERATURE
+    #     self.temp()  # call the temp function just once
+    #
+    # def temp(self):
+    #     self.temperature.set(self.current())
+    #     self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
+    #
+    # def current(self):
+    #         while True:
+    #             TEMPERATURE = round(bme680.temperature, 2)
+    #             print(f'{TEMPERATURE}')
+    #         return TEMPERATURE
 
 if __name__ == "__main__":
     app = App()
