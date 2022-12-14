@@ -49,12 +49,11 @@ class App(customtkinter.CTk):
 
 import random
 class Temp:
-    temp = 0
 
     def current():
         while True:
             TEMPERATURE = round(bme680.temperature, 2)
-            time.sleep(1)
+        return TEMPERATURE
 
 if __name__ == "__main__":
     app = App()
