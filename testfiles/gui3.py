@@ -245,11 +245,11 @@ class App(customtkinter.CTk):
     def led_switch(self, event=None):
         if self.is_on:
             print("LED on")
-            #GPIO.output(rc1, False)
+            GPIO.output(rc1, False)
             self.is_on = False
         else:
             print("LED off")
-            #GPIO.output(rc1, True)
+            GPIO.output(rc1, True)
             self.is_on = True
 
     #########################################################################
@@ -259,11 +259,11 @@ class App(customtkinter.CTk):
     def lights_switch(self, event=None):
         if self.is_on:
             print("Lights on")
-            #GPIO.output(rc2, False)
+            GPIO.output(rc2, False)
             self.is_on = False
         else:
             print("Lights off")
-            #GPIO.output(rc2, True)
+            GPIO.output(rc2, True)
             self.is_on = True
 
     #########################################################################
@@ -293,19 +293,14 @@ class App(customtkinter.CTk):
         current_temp, current_pres, = self.current()
         self.temperature.set(current_temp)
         self.pressure.set(current_pres)
-
-        # self.pressure.set(self.current())
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
         while True:
             current_temp = round(bme680.temperature, 2)
             current_pres = round(bme680.pressure, 2)
-            print(f'{current_temp}')
+            print(f'{current_temp}, {current_pres}')
             return current_temp, current_pres
-
-
-
 
 
 
