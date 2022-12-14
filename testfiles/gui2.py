@@ -45,12 +45,15 @@ class App(customtkinter.CTk):
 
     def temp(self):
         self.temperature.set(self.current())
-        self.after(1000, self.temp)  # 2000 milliseconds = 2 seconds
+        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
             while True:
-                TEMPERATURE = round(bme680.temperature, 2)
+                TEMPERATURE = round(bme680.temperature, 1)
+                print(f'{TEMPERATURE}')
             return TEMPERATURE
+
+
 if __name__ == "__main__":
     app = App()
     app.mainloop()
