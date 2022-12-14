@@ -1,29 +1,29 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-import board
-from adafruit_motorkit import MotorKit
-import RPi.GPIO as GPIO
-from picamera import PiCamera
-from time import sleep
-import os
-
-
-# Setting up Motors
-kit1 = MotorKit()
-kit2 = MotorKit(address=0x61)
-kit1.motor1.throttle = 0
-kit2.motor1.throttle = 0
-
-# Setting up relays to control LED and main lights
-rc1 = 23
-rc2 = 24
-GPIO.setwarnings(True)
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(rc1, GPIO.OUT)
-GPIO.setup(rc2, GPIO.OUT)
-GPIO.output(rc1, True)
-GPIO.output(rc2, True)
+# import board
+# from adafruit_motorkit import MotorKit
+# import RPi.GPIO as GPIO
+# from picamera import PiCamera
+# from time import sleep
+# import os
+#
+#
+# # Setting up Motors
+# kit1 = MotorKit()
+# kit2 = MotorKit(address=0x61)
+# kit1.motor1.throttle = 0
+# kit2.motor1.throttle = 0
+#
+# # Setting up relays to control LED and main lights
+# rc1 = 23
+# rc2 = 24
+# GPIO.setwarnings(True)
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(rc1, GPIO.OUT)
+# GPIO.setup(rc2, GPIO.OUT)
+# GPIO.output(rc1, True)
+# GPIO.output(rc2, True)
 
 
 # Setting up theme of GUI
@@ -36,6 +36,10 @@ class App(customtkinter.CTk):
 
         # configure window
         self.is_on = True
+        self.temperature = tkinter.StringVar()
+        self.temperature.set(50)
+        #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
+
         self.title("Cool Blue")
         self.geometry(f"{1200}x{560}")
 
@@ -146,11 +150,15 @@ class App(customtkinter.CTk):
         # Create sidebar grid for Temperature, Pressure, Humidity and Luminosity
         ###################################################################
         # create radiobutton frame
-        self.temperature = customtkinter.CTkFrame(self)
-        self.temperature.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
-        self.temperature.grid_rowconfigure(2, weight=1)
-        self.label_temperature = customtkinter.CTkLabel(master=self.temperature, text="Temperature")
-        self.label_temperature.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+        self.temperature_frame = customtkinter.CTkFrame(self)
+        self.temperature_frame.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
+        self.temperature_frame.grid_rowconfigure(2, weight=1)
+        self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text="Temperature")
+        self.label_temperature.grid(row=0, column=2, columnspan=2, padx=10, pady=10, sticky="")
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame,  textvariable=self.temperature, font=customtkinter.CTkFont(size=50, weight="bold"))
+        self.label_temperature_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame,  text = f'\N{DEGREE CELSIUS}', font=customtkinter.CTkFont(size=30, weight="bold"))
+        self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=10, pady=10, sticky="w")
 
         # create checkbox and switch frame
         self.pressure = customtkinter.CTkFrame(self)
@@ -177,6 +185,14 @@ class App(customtkinter.CTk):
     def key_pressed(self, event):
         if event.char in 'wads':
             self.motion_event_start(event, event.char.upper())
+        elif event.keysym == 'Left':
+            self.move_left_arm_function()
+        elif event.keysym == 'Right':
+            self.move_right_arm_function()
+        elif event.keysym == 'Up':
+            self.move_left_arm_function()
+        elif event.keysym == 'Down':
+            self.move_right_arm_function()
 
     def key_released(self, event):
         if event.char in 'wads':
@@ -184,18 +200,19 @@ class App(customtkinter.CTk):
 
     def motion_event_start(self, event, button):
         if button == "W":
-            kit1.motor1.throttle = 1
-            kit2.motor1.throttle = 1
+            # kit1.motor1.throttle = 1
+            # kit2.motor1.throttle = 1
+            print(f"{button} Pressed")
         elif button == "S":
-            kit1.motor1.throttle = -1
-            kit2.motor1.throttle = -1
+            # kit1.motor1.throttle = -1
+            # kit2.motor1.throttle = -1
 
-        print(f"{button} Pressed")
+            print(f"{button} Pressed")
 
     def motion_event_stop(self, event, button):
         print(f"{button} Released")
-        kit1.motor1.throttle = 0
-        kit2.motor1.throttle = 0
+        # kit1.motor1.throttle = 0
+        # kit2.motor1.throttle = 0
 
     #########################################################################
     # LED Switch
@@ -204,11 +221,11 @@ class App(customtkinter.CTk):
     def led_switch(self, event=None):
         if self.is_on:
             print("LED on")
-            GPIO.output(rc1, False)
+            #GPIO.output(rc1, False)
             self.is_on = False
         else:
             print("LED off")
-            GPIO.output(rc1, True)
+            #GPIO.output(rc1, True)
             self.is_on = True
 
     #########################################################################
@@ -218,27 +235,27 @@ class App(customtkinter.CTk):
     def lights_switch(self, event=None):
         if self.is_on:
             print("Lights on")
-            GPIO.output(rc2, False)
+            #GPIO.output(rc2, False)
             self.is_on = False
         else:
             print("Lights off")
-            GPIO.output(rc2, True)
+            #GPIO.output(rc2, True)
             self.is_on = True
 
     #########################################################################
     # Camera Switch
     #########################################################################
     def camera_switch(self, event=None):
-        camera = PiCamera()
+        #camera = PiCamera()
         if self.is_on:
-            camera.start_preview()
+            #camera.start_preview()
             print("Cam on")
 
             self.is_on = False
         else:
             print("Cam off")
-            camera.stop_preview()
-            camera.close()
+            # camera.stop_preview()
+            # camera.close()
 
             self.is_on = True
 
