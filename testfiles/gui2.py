@@ -44,17 +44,13 @@ class App(customtkinter.CTk):
         self.temp()  # call the temp function just once
 
     def temp(self):
-        self.temperature.set(Temp.current())
+        self.temperature.set(self.current())
         self.after(1000, self.temp)  # 2000 milliseconds = 2 seconds
 
-import random
-class Temp:
-
-    def current():
-        while True:
-            TEMPERATURE = round(bme680.temperature, 2)
-        return TEMPERATURE
-
+    def current(self):
+            while True:
+                TEMPERATURE = round(bme680.temperature, 2)
+            return TEMPERATURE
 if __name__ == "__main__":
     app = App()
     app.mainloop()
