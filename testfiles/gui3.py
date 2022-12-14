@@ -52,6 +52,7 @@ class App(customtkinter.CTk):
         self.is_on = True
         self.temperature = tkinter.IntVar()
         self.pressure = tkinter.IntVar()
+
         #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
 
         self.title("Cool Blue")
@@ -176,11 +177,17 @@ class App(customtkinter.CTk):
         self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
         # create checkbox and switch frame
-        self.pressure = customtkinter.CTkFrame(self)
-        self.pressure.grid(row=1, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
-        self.pressure.grid_rowconfigure(1, weight=1)
-        self.label_pressure = customtkinter.CTkLabel(master=self.pressure, text="Pressure")
+        self.pressure_frame = customtkinter.CTkFrame(self)
+        self.pressure_frame.grid(row=1, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
+        self.pressure_frame.grid_rowconfigure(1, weight=1)
+
+        self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Pressure")
         self.label_pressure.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+
+        self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure, font=customtkinter.CTkFont(size=50, weight="bold"))
+        self.label_pressire_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
+        self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, text = f'\N{DEGREE CELSIUS}', font=customtkinter.CTkFont(size=30, weight="bold"))
+        self.label_pressure_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
 
 
@@ -204,6 +211,7 @@ class App(customtkinter.CTk):
     def temp(self):
         current_temp, current_pres, = self.current()
         self.temperature.set(current_temp)
+        self.pressure.set(current_pres)
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
