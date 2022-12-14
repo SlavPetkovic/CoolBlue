@@ -2,14 +2,14 @@ import time
 import tkinter
 import customtkinter
 
-import time
-import board
-from busio import I2C
-import adafruit_bme680
-
-# Create library object using our Bus I2C port
-i2c = I2C(board.SCL, board.SDA)
-bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+# import time
+# import board
+# from busio import I2C
+# import adafruit_bme680
+#
+# # Create library object using our Bus I2C port
+# i2c = I2C(board.SCL, board.SDA)
+# bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
 
 # Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -23,6 +23,7 @@ class App(customtkinter.CTk):
         self.title("Cool Blue")
         self.geometry(f"{220}x{160}")
         self.temperature = tkinter.IntVar()
+        self.pressure = tkinter.IntVar()
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
         # create frame for environmental variable
@@ -33,27 +34,41 @@ class App(customtkinter.CTk):
         self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text="Temperature")
         self.label_temperature.grid(row=0, column=1, columnspan=2, padx=10, pady=10, sticky="")
 
-        self.label_temperature_value = customtkinter.CTkLabel(
-            master=self.temperature_frame, textvariable=self.temperature,
-            font=customtkinter.CTkFont(size=50, weight="bold"))
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature,font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_temperature_value.grid(row=1, column=1, columnspan=1, padx=10, pady=10, sticky="e")
 
-        self.label_temperature_value = customtkinter.CTkLabel(
-            master=self.temperature_frame, text = f'\N{DEGREE CELSIUS}',
-            font=customtkinter.CTkFont(size=30, weight="bold"))
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, text = f'\N{DEGREE CELSIUS}',font=customtkinter.CTkFont(size=30, weight="bold"))
         self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
+
+
+        self.pressure_frame = customtkinter.CTkFrame(self)
+        self.pressure_frame.grid(row=0, column=2, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
+        self.pressure_frame.grid_rowconfigure(2, weight=1)
+
+        self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Temperature")
+        self.label_pressure.grid(row=0, column=1, columnspan=2, padx=10, pady=10, sticky="")
+
+        self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure,font=customtkinter.CTkFont(size=50, weight="bold"))
+        self.label_pressure_value.grid(row=1, column=1, columnspan=1, padx=10, pady=10, sticky="e")
+
+        self.label_pressure_value = customtkinter.CTkLabel(master=self.temperature_frame, text = f'\N{DEGREE CELSIUS}',font=customtkinter.CTkFont(size=30, weight="bold"))
+        self.label_pressure_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
+
+
+
 
         self.temp()  # call the temp function just once
 
     def temp(self):
-        self.temperature.set(self.current())
+        self.temperature.set(self.current(self.current_temp))
+        #self.pressure.set(self.current())
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
             while True:
-                TEMPERATURE = round(bme680.temperature, 2)
-                print(f'{TEMPERATURE}')
-                return TEMPERATURE
+                self.current_temp = round(bme680.temperature, 2)
+                print(f'{self.current_temp}')
+                return self.current_temp
 
 if __name__ == "__main__":
     app = App()
