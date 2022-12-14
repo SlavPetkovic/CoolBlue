@@ -1,3 +1,4 @@
+import datetime
 import time
 import tkinter
 import customtkinter
@@ -34,17 +35,21 @@ class App(customtkinter.CTk):
             font=customtkinter.CTkFont(size=30, weight="bold"))
         self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
-        self.temp()  # call the temp function just once
+        self.temp()
+        # call the temp function just once
 
-    def temp(self):
-        self.temperature.set(self.current())
-        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
+        def temp(self):
+            self.temperature.set(self.current())
+            self.after(2000, self.temp)
 
-    def current(self):
-        import random
-        temp = random.randint(10, 35)
-        diff = random.randint(-3,3)
-        return temp + diff
+        def current(self):
+            while True:
+                now = datetime.datetime.now()
+                cur_temp = round(bme680.temperature,1)
+                print(f'{cur_temp}')
+                return cur_temp
+
+
 
 if __name__ == "__main__":
     app = App()
