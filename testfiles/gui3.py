@@ -169,25 +169,21 @@ class App(customtkinter.CTk):
         self.temperature_frame.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.temperature_frame.grid_rowconfigure(2, weight=1)
 
-        self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text=f'Temperature \N{DEGREE CELSIUS}')
+        self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text=f'Temperature (\N{DEGREE CELSIUS})')
         self.label_temperature.grid(row=0, column=2, columnspan=2, padx=10, pady=10, sticky="")
         self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_temperature_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, text = f'\N{DEGREE CELSIUS}', font=customtkinter.CTkFont(size=30, weight="bold"))
-        self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
 
         # create checkbox and switch frame
         self.pressure_frame = customtkinter.CTkFrame(self)
         self.pressure_frame.grid(row=1, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.pressure_frame.grid_rowconfigure(1, weight=1)
 
-        self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Pressure")
+        self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Pressure (in Hg)")
         self.label_pressure.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
-
         self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_pressure_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-        self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, text = "in Hg", font=customtkinter.CTkFont(size=30, weight="bold"))
-        self.label_pressure_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
+
 
 
 
