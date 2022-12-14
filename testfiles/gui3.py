@@ -166,7 +166,7 @@ class App(customtkinter.CTk):
         ###################################################################
         # Create sidebar grid for Temperature, Pressure, Humidity and Luminosity
         ###################################################################
-        # create frame for environmental variable
+        # create temperature frame
         self.temperature_frame = customtkinter.CTkFrame(self)
         self.temperature_frame.grid(row=0, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.temperature_frame.grid_rowconfigure(2, weight=1)
@@ -176,7 +176,7 @@ class App(customtkinter.CTk):
         self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_temperature_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
 
-        # create checkbox and switch frame
+        # create pressure frame
         self.pressure_frame = customtkinter.CTkFrame(self)
         self.pressure_frame.grid(row=1, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.pressure_frame.grid_rowconfigure(1, weight=1)
@@ -186,8 +186,7 @@ class App(customtkinter.CTk):
         self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_pressure_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
 
-
-        # create checkbox and switch frame
+        # create humidity frame
         self.humidity_frame = customtkinter.CTkFrame(self)
         self.humidity_frame.grid(row=3, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="")
         self.humidity_frame.grid_rowconfigure(1, weight=1)
@@ -197,21 +196,24 @@ class App(customtkinter.CTk):
         self.label_humidity_value = customtkinter.CTkLabel(master=self.humidity_frame, textvariable=self.humidity, font=customtkinter.CTkFont(size=50, weight="bold"))
         self.label_humidity_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
 
-        # # create checkbox and switch frame
-        # self.luminosity = customtkinter.CTkFrame(self)
-        # self.luminosity.grid(row=4, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="")
-        # self.luminosity.grid_rowconfigure(1, weight=1)
-        # self.label_luminosity = customtkinter.CTkLabel(master=self.luminosity, text="Luminosity")
-        # self.label_luminosity.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+        # create checkbox and switch frame
+        self.luminosity_frame = customtkinter.CTkFrame(self)
+        self.luminosity_frame.grid(row=4, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="")
+        self.luminosity_frame.grid_rowconfigure(1, weight=1)
+
+        self.label_luminosity = customtkinter.CTkLabel(master=self.luminosity_frame, text="Luminosity")
+        self.label_luminosity.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+        self.label_luminosity_value = customtkinter.CTkLabel(master=self.luminosity_frame, textvariable=self.luminosity, font=customtkinter.CTkFont(size=50, weight="bold"))
+        self.label_luminosity_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
 
         self.temp()  # call the temp function just once
 
     def temp(self):
-        current_temp, current_pres, current_hum = self.current()
+        current_temp, current_pres, current_hum, current_lum = self.current()
         self.temperature.set(current_temp)
         self.pressure.set(current_pres)
         self.humidity.set(current_hum)
-
+        self.luminosity.set(current_lum)
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
@@ -219,8 +221,9 @@ class App(customtkinter.CTk):
             current_temp = round(bme680.temperature, 2)
             current_pres = round(bme680.pressure * 0.030, 2)
             current_hum =  round(bme680.humidity, 2)
-            print(f'{current_temp}')
-            return current_temp, current_pres, current_hum
+            current_lum = round(veml7700.light, 2)
+            print(f'{current_temp},{current_pres}, {current_hum}, {current_lum}')
+            return current_temp, current_pres, current_hum, current_lum
 
 
     def key_pressed(self, event):
