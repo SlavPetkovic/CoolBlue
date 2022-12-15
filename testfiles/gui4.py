@@ -45,7 +45,7 @@ class App(customtkinter.CTk):
         self.pressure_frame.grid(row=0, column=2, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
         self.pressure_frame.grid_rowconfigure(2, weight=1)
 
-        self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Temperature")
+        self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Pressure")
         self.label_pressure.grid(row=0, column=1, columnspan=2, padx=10, pady=10, sticky="")
 
         self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure,font=customtkinter.CTkFont(size=50, weight="bold"))
@@ -65,11 +65,10 @@ class App(customtkinter.CTk):
         self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
     def current(self):
-            while True:
-                current_temp = round(bme680.temperature, 2)
-                current_pres = round(bme680.pressure, 2)
-                print(f'{current_temp}')
-                return current_temp, current_pres
+            current_temp = round(bme680.temperature, 2)
+            current_pres = round(bme680.pressure, 2)
+            print(f'{current_temp}')
+            return current_temp, current_pres
 
 if __name__ == "__main__":
     app = App()
