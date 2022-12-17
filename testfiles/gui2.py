@@ -52,35 +52,37 @@ class App(customtkinter.CTk):
     # Camera Switch
     #########################################################################
     def camera_switch(self, event=None):
-
         if self.is_on:
-            self.update_frames()
-
+            self.capture = cv2.VideoCapture(0)
             print("Cam on")
-
             self.is_on = False
+            self.update_frames()
         else:
-            #self.close_camera()
+            self.close_camera()
             self.image
             print("Cam off")
 
             self.is_on = True
 
     def update_frames(self):
-        # Get the current frame from the webcam
-        _, frame = self.capture.read()
 
-        # Convert the frame to a PhotoImage object
+        # Change the frame by the initial image and breaks the loop
+        if self.is_on:
+            self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
+            return
+        else:
+
+            _, frame = self.capture.read()
+
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
         frame = Image.fromarray(frame)
         frame = ImageTk.PhotoImage(frame)
 
-        # Update the canvas with the new frame
         self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
         self.picam_canvas.image = frame
 
-        # Schedule the next update
-        self.after(10, self.update_frames)
+        self.picam_canvas.after(1, self.update_frames)
     def close_camera(self):
         self.capture.release()
 
