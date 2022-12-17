@@ -1,8 +1,8 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-import cv2
-from PIL import Image,ImageTk
+# import cv2
+# from PIL import Image,ImageTk
 # import board
 # from adafruit_motorkit import MotorKit
 # import RPi.GPIO as GPIO
@@ -241,8 +241,6 @@ class App(customtkinter.CTk):
         self.label_luminosity_value = customtkinter.CTkLabel(master=self.luminosity_frame, textvariable=self.luminosity, font=customtkinter.CTkFont(size=40, weight="bold"))
         self.label_luminosity_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
 
-        self.capture = cv2.VideoCapture(0)
-        self.update_frame()
 
         # self.temp()  # call the temp function just once
     #
@@ -262,6 +260,9 @@ class App(customtkinter.CTk):
     #         current_lum = round(veml7700.light, 2)
     #         print(f'{current_temp},{current_pres}, {current_hum}, {current_lum}')
     #         return current_temp, current_pres, current_hum, current_lum
+
+
+
 
     def key_pressed(self, event):
         if event.char in 'wads':
@@ -323,22 +324,43 @@ class App(customtkinter.CTk):
             # GPIO.output(rc2, True)
             self.is_on = True
 
-    #########################################################################
-    # Camera Switch
-    #########################################################################
-    def camera_switch(self, event=None):
-        #camera = PiCamera()
-        if self.is_on:
-            #camera.start_preview()
-            print("Cam on")
-
-            self.is_on = False
-        else:
-            print("Cam off")
-            # camera.stop_preview()
-            # camera.close()
-
-            self.is_on = True
+    # #########################################################################
+    # # Camera Switch
+    # #########################################################################
+    # def camera_switch(self, event=None):
+    #     if self.is_on:
+    #         self.capture = cv2.VideoCapture(0)
+    #         print("Cam on")
+    #         self.is_on = False
+    #         self.update_frames()
+    #     else:
+    #         self.close_camera()
+    #         self.image
+    #         print("Cam off")
+    #
+    #         self.is_on = True
+    #
+    # def update_frames(self):
+    #
+    #     # Change the frame by the initial image and breaks the loop
+    #     if self.is_on:
+    #         self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
+    #         return
+    #     else:
+    #
+    #         _, frame = self.capture.read()
+    #
+    #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #
+    #     frame = Image.fromarray(frame)
+    #     frame = ImageTk.PhotoImage(frame)
+    #
+    #     self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
+    #     self.picam_canvas.image = frame
+    #
+    #     self.picam_canvas.after(1, self.update_frames)
+    # def close_camera(self):
+    #     self.capture.release()
 
 
 
