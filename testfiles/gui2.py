@@ -1,13 +1,9 @@
-import time
 import tkinter
+import tkinter.messagebox
 import customtkinter
-import time
-import board
-from busio import I2C
-import adafruit_bme680
-# Create library object using our Bus I2C port
-i2c = I2C(board.SCL, board.SDA)
-bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+from PIL import Image,ImageTk
+import cv2
+
 
 # Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -16,49 +12,78 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+
         # configure window
         self.is_on = True
+        self.image = ImageTk.PhotoImage(Image.open("../data/Mars.PNG"))
+        self.capture = cv2.VideoCapture(0)
+
         self.title("Cool Blue")
-        self.geometry(f"{220}x{160}")
-        self.temperature = tkinter.IntVar()
+        self.geometry(f"{1200}x{635}")
+
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
-        # create frame for environmental variable
-        self.temperature_frame = customtkinter.CTkFrame(self)
-        self.temperature_frame.grid(row=0, column=1, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="n")
-        self.temperature_frame.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure((2, 3), weight=0)
+        self.grid_rowconfigure((0, 1, 2, 3), weight=0)
 
-        self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text="Temperature")
-        self.label_temperature.grid(row=0, column=1, columnspan=2, padx=10, pady=10, sticky="")
+        ###################################################################
+        # Create Sidebar for LED, LIghts and Camera controls
+        ###################################################################
+        self.lights_control = customtkinter.CTkFrame(self)
+        self.lights_control.grid(row=3, column=0, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nsew")
+        self.lights_control.grid_rowconfigure(1, weight=1)
 
-        self.label_temperature_value = customtkinter.CTkLabel(
-            master=self.temperature_frame, textvariable=self.temperature,
-            font=customtkinter.CTkFont(size=50, weight="bold"))
-        self.label_temperature_value.grid(row=1, column=1, columnspan=1, padx=10, pady=10, sticky="e")
+        # Camera
+        self.camera_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Camera", command=self.camera_switch)
+        self.camera_switch.grid(row=2, column=1, pady=10, padx=20, )
 
-        self.label_temperature_value = customtkinter.CTkLabel(
-            master=self.temperature_frame, text = f'\N{DEGREE CELSIUS}',
-            font=customtkinter.CTkFont(size=30, weight="bold"))
-        self.label_temperature_value.grid(row=1, column=3, columnspan=1, padx=(10, 10), pady=10, sticky="sw")
+        ###################################################################
+        # Create canvas for RPCam live stream
+        ###################################################################
+        self.picam_frame = customtkinter.CTkFrame(self)
+        self.picam_frame.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(10, 10), sticky="nsew")
+        self.picam_frame.grid_rowconfigure(4, weight=1)
 
-        self.temp()  # call the temp function just once
+        self.picam_canvas = tkinter.Canvas(self.picam_frame, width=1730, height=944)
+        self.picam_canvas.pack()
 
-    def temp(self):
-        self.temperature.set(self.current())
-        self.after(2000, self.temp)  # 2000 milliseconds = 2 seconds
 
-    def current(self):
-            while True:
-                TEMPERATURE = round(bme680.temperature, 1)
-                print(f'{TEMPERATURE}')
-            return TEMPERATURE
+    #########################################################################
+    # Camera Switch
+    #########################################################################
+    def camera_switch(self, event=None):
 
+        if self.is_on:
+            self.update_frames()
+
+            print("Cam on")
+
+            self.is_on = False
+        else:
+            #self.close_camera()
+            self.image
+            print("Cam off")
+
+            self.is_on = True
+
+    def update_frames(self):
+        # Get the current frame from the webcam
+        _, frame = self.capture.read()
+
+        # Convert the frame to a PhotoImage object
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = Image.fromarray(frame)
+        frame = ImageTk.PhotoImage(frame)
+
+        # Update the canvas with the new frame
+        self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
+        self.picam_canvas.image = frame
+
+        # Schedule the next update
+        self.after(10, self.update_frames)
+    def close_camera(self):
+        self.capture.release()
 
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-
-
-
-
-

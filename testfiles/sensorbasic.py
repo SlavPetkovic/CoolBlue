@@ -17,4 +17,18 @@ while True:
     now = datetime.datetime.now()
     TIMESTAMP = (now)
     TEMPERATURE = round(bme680.temperature, 2)
-    print(f"{TIMESTAMP}")
+    GAS = round(bme680.gas, 2)
+    HUMIDITY = round(bme680.humidity, 2)
+    PRESSURE = round(bme680.pressure, 2)
+    ALTITUDE = round(bme680.altitude, 2)
+    LUMINOSITY = round(veml7700.light, 2)
+
+    conn = sqlite3.connect(dbname)
+    curs = conn.cursor()
+    curs.execute(
+        "INSERT INTO SensorsData (TIMESTAMP, TEMPERATURE, GAS, HUMIDITY, PRESSURE, ALTITUDE, LUMINOSITY) values(?,?,?,?,?,?,?)",
+        (TIMESTAMP, TEMPERATURE, GAS, HUMIDITY, PRESSURE, ALTITUDE, LUMINOSITY))
+    conn.commit()
+    conn.close()
+    time.sleep(1)
+    print(f"{TIMESTAMP}, {TEMPERATURE}, {GAS}, {HUMIDITY}, {PRESSURE}, {ALTITUDE}, {LUMINOSITY}")
