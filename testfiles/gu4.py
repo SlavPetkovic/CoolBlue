@@ -42,7 +42,8 @@ class App(customtkinter.CTk):
         self.picam_frame.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(10, 10), sticky="nsew")
         self.picam_frame.grid_rowconfigure(4, weight=1)
         # Camera Canvas
-        self.picam_canvas = tkinter.Canvas(self.picam_frame, width=1730, height=944)
+        self.picam_canvas = tkinter.Canvas(self.picam_frame, width=800, height=600)
+        self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
         self.picam_canvas.pack()
 
     #########################################################################
@@ -52,14 +53,14 @@ class App(customtkinter.CTk):
         if self.is_on:
             self.capture = cv2.VideoCapture(0)
             print("Cam on")
-            self.is_on = True
+            self.is_on = False
             self.update_frames()
         else:
             self.close_camera()
             self.image
             print("Cam off")
 
-            self.is_on = False
+            self.is_on = True
 
     def update_frames(self):
         # Change the frame by the initial image and breaks the loop
