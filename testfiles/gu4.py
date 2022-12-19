@@ -17,7 +17,7 @@ class App(customtkinter.CTk):
         self.capture = cv2.VideoCapture(0)
 
         self.title("Cool Blue")
-        self.geometry(f"{1200}x{635}")
+        self.geometry(f"{800}x{600}")
 
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
