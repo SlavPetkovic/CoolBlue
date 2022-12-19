@@ -60,7 +60,7 @@ class App(customtkinter.CTk):
         self.pressure.set(29)
         self.humidity.set(97)
         self.luminosity.set(2000)
-        self.image = ImageTk.PhotoImage(Image.open("../data/Mars.PNG"))
+        self.image = ImageTk.PhotoImage(Image.open("../data/Mars.png"))
 
 
         #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
