@@ -13,7 +13,7 @@ class App(customtkinter.CTk):
         super().__init__()
         # configure window
         self.is_on = True
-        self.image = ImageTk.PhotoImage(Image.open("../data/Mars.PNG"))
+        self.image = ImageTk.PhotoImage(Image.open("../data/Mars.png"))
         self.capture = cv2.VideoCapture(0)
 
         self.title("Cool Blue")
