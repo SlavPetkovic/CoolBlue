@@ -363,9 +363,6 @@ class App(customtkinter.CTk):
     #     self.capture.release()
 
 
-
-
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()
