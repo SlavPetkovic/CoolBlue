@@ -176,7 +176,8 @@ class App(customtkinter.CTk):
         self.picam_frame = customtkinter.CTkFrame(self)
         self.picam_frame.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(10, 10), sticky="nsew")
         self.picam_frame.grid_rowconfigure(4, weight=1)
-        self.picam_canvas = customtkinter.CTkCanvas(self.picam_frame, width=1730, height=944, background="gray")
+        # self.picam_canvas = customtkinter.CTkCanvas(self.picam_frame, width=1730, height=944, background="gray")
+        self.picam_canvas = customtkinter.CTkCanvas(self.picam_frame, width=800, height=600, background="gray")
         self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
         self.picam_canvas.pack()
 
