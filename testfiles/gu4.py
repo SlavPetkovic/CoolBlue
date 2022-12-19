@@ -52,14 +52,14 @@ class App(customtkinter.CTk):
         if self.is_on:
             self.capture = cv2.VideoCapture(0)
             print("Cam on")
-            self.is_on = False
+            self.is_on = True
             self.update_frames()
         else:
             self.close_camera()
             self.image
             print("Cam off")
 
-            self.is_on = True
+            self.is_on = False
 
     def update_frames(self):
         # Change the frame by the initial image and breaks the loop
