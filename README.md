@@ -79,6 +79,9 @@ sudo pip3 install picamera
 sudo pip3 install pygames
 sudo apt install python3-picamera
 
+sudo pip3 install customtkinter
+sudo pip3 install opencv-python
+
 sudo apt-get install python3-pil python3-pil.imagetk
 sudo pip3 install -U numpy
 ```

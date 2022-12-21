@@ -59,7 +59,7 @@ class App(customtkinter.CTk):
         self.temperature.set(20)
         self.pressure.set(29)
         self.humidity.set(97)
-        self.luminosity.set(2000)
+        self.luminosity.set(2102)
         self.image = ImageTk.PhotoImage(Image.open("../data/CoolBlue.png"))
         self.logoimg = ImageTk.PhotoImage(Image.open("../data/logo.png"))
 
