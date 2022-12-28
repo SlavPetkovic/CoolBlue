@@ -16,7 +16,7 @@ GPIO.setwarnings(False)
 # Create a socket and bind to a port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 12345))
-s.listen(1)
+s.listen(5)
 
 # Accept an incoming connection
 conn, addr = s.accept()
