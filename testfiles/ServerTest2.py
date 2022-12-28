@@ -10,6 +10,7 @@ rc2 = 24
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(rc1, GPIO.OUT)
+GPIO.setwarnings(False)
 # GPIO.output(rc1, True)
 
 # Create a socket and bind to a port
@@ -34,6 +35,9 @@ while True:
         GPIO.output(rc1, True)
     elif data == "OFF":
         GPIO.output(rc1, False)
+
+    else:
+        print("data is wrong")
 
 # Close the connection
 # conn.close()
