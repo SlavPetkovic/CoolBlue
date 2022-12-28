@@ -33,11 +33,13 @@ while True:
     # Control the LED based on the received data
     if data == "ON":
         GPIO.output(rc1, True)
+        print("Turning LED On")
     elif data == "OFF":
         GPIO.output(rc1, False)
+        print("Turning LED OFF")
 
     else:
-        print("data is wrong")
+        print("Something is wrong")
 
 # Close the connection
 # conn.close()

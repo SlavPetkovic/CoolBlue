@@ -10,4 +10,4 @@ s.connect(('192.168.2.88', 12345))
 s.send(b"ON")
 
 # Close the connection
-s.close()
+
