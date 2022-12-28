@@ -1,46 +1,46 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-# import cv2
-# from PIL import Image,ImageTk
-# import board
-# from adafruit_motorkit import MotorKit
-# import RPi.GPIO as GPIO
-# from picamera import PiCamera
-# from time import sleep
-# import os
-# import time
-# from busio import I2C
-# import adafruit_bme680
-# import datetime
-# import adafruit_veml7700
-#
-#
-# # Setting up Motors
-# kit1 = MotorKit()
-# kit2 = MotorKit(address=0x61)
-# kit1.motor1.throttle = 0
-# kit2.motor1.throttle = 0
-#
-# # Setting up relays to control LED and main lights
-# rc1 = 23
-# rc2 = 24
-# GPIO.setwarnings(True)
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(rc1, GPIO.OUT)
-# GPIO.setup(rc2, GPIO.OUT)
-# GPIO.output(rc1, True)
-# GPIO.output(rc2, True)
-#
-#
-# # Sensors
-# i2c = board.I2C()  # uses board.SCL and board.SDA
-# veml7700 = adafruit_veml7700.VEML7700(i2c)
-# # Create library object using our Bus I2C port
-# i2c = I2C(board.SCL, board.SDA)
-# bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
-# # change this to match the location's pressure (hPa) at sea level
-# bme680.sea_level_pressure = 1013.25
+import cv2
+from PIL import Image,ImageTk
+import board
+from adafruit_motorkit import MotorKit
+import RPi.GPIO as GPIO
+from picamera import PiCamera
+from time import sleep
+import os
+import time
+from busio import I2C
+import adafruit_bme680
+import datetime
+import adafruit_veml7700
+
+
+# Setting up Motors
+kit1 = MotorKit()
+kit2 = MotorKit(address=0x61)
+kit1.motor1.throttle = 0
+kit2.motor1.throttle = 0
+
+# Setting up relays to control LED and main lights
+rc1 = 23
+rc2 = 24
+GPIO.setwarnings(True)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(rc1, GPIO.OUT)
+GPIO.setup(rc2, GPIO.OUT)
+GPIO.output(rc1, True)
+GPIO.output(rc2, True)
+
+
+# Sensors
+i2c = board.I2C()  # uses board.SCL and board.SDA
+veml7700 = adafruit_veml7700.VEML7700(i2c)
+# Create library object using our Bus I2C port
+i2c = I2C(board.SCL, board.SDA)
+bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, debug=False)
+# change this to match the location's pressure (hPa) at sea level
+bme680.sea_level_pressure = 1013.25
 
 # Setting up theme of GUI
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -59,8 +59,9 @@ class App(customtkinter.CTk):
         self.temperature.set(20)
         self.pressure.set(29)
         self.humidity.set(97)
-        self.luminosity.set(2000)
-        self.image = ImageTk.PhotoImage(Image.open("../data/Mars.PNG"))
+        self.luminosity.set(2102)
+        self.image = ImageTk.PhotoImage(Image.open("../data/CoolBlue.png"))
+        self.logoimg = ImageTk.PhotoImage(Image.open("../data/logo.png"))
 
 
         #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
@@ -158,17 +159,16 @@ class App(customtkinter.CTk):
         self.camera_switch = customtkinter.CTkSwitch(master=self.lights_control, text="Camera", command=self.camera_switch)
         self.camera_switch.grid(row=2, column=1, pady=10, padx=20, )
 
-
         ###################################################################
         # Create Sidebar for Placeholder controls
         ###################################################################
-        self.logo = customtkinter.CTkFrame(self)
-        self.logo.grid(row=4, column=0, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nsew")
-        self.logo.grid_rowconfigure(1, weight=1)
+        self.logo_frame = customtkinter.CTkFrame(self)
+        self.logo_frame.grid(row=4, column=0, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nsew")
+        self.logo_frame.grid_rowconfigure(1, weight=1)
 
-        # picam label
-        self.logo_label = customtkinter.CTkLabel(master=self.logo, text="logo", font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.logo_label.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
+        self.logo_canvas = customtkinter.CTkCanvas(self.logo_frame, width=400, height=220, background="#2b2b2b",  highlightthickness=1, highlightbackground="#2b2b2b")
+        self.logo_canvas.create_image(0, 0, image=self.logoimg, anchor="nw")
+        self.logo_canvas.pack()
 
         ###################################################################
         # Create canvas for RPCam live stream
@@ -176,27 +176,10 @@ class App(customtkinter.CTk):
         self.picam_frame = customtkinter.CTkFrame(self)
         self.picam_frame.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(10, 10), sticky="nsew")
         self.picam_frame.grid_rowconfigure(4, weight=1)
-        self.picam_canvas = customtkinter.CTkCanvas(self.picam_frame, width=1730, height=944, background="gray")
+        # self.picam_canvas = customtkinter.CTkCanvas(self.picam_frame, width=1730, height=944, background="gray")
+        self.picam_canvas = customtkinter.CTkCanvas(self.picam_frame, width=1730, height=943, background="gray", highlightthickness=1, highlightbackground="#1f6aa5")
         self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
         self.picam_canvas.pack()
-
-        #
-        # # picam label
-        # self.picam_label = customtkinter.CTkLabel(master=self.picam, text="Live Stream", font=customtkinter.CTkFont(size=20, weight="bold"))
-        # self.picam_label.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
-
-
-        # ###################################################################
-        # # Create canvas for RPCam live stream
-        # ###################################################################
-        # self.picam = customtkinter.CTkCanvas(self, width=800, background="gray")
-        # self.picam.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(20, 20), sticky="nsew")
-        # self.picam.grid_rowconfigure(4, weight=1)
-        #
-        # # picam label
-        # self.picam_label = customtkinter.CTkLabel(master=self.picam, text="Live Stream", font=customtkinter.CTkFont(size=20, weight="bold"))
-        # self.picam_label.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
-
 
         ###################################################################
         # Create sidebar grid for Temperature, Pressure, Humidity and Luminosity
@@ -208,9 +191,8 @@ class App(customtkinter.CTk):
 
         self.label_temperature = customtkinter.CTkLabel(master=self.temperature_frame, text=f'Temperature (\N{DEGREE CELSIUS})')
         self.label_temperature.grid(row=0, column=2, columnspan=2, padx=10, pady=10, sticky="e")
-        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature, font=customtkinter.CTkFont(size=40, weight="bold"))
+        self.label_temperature_value = customtkinter.CTkLabel(master=self.temperature_frame, textvariable=self.temperature, font=customtkinter.CTkFont(size=40, weight="bold"), text_color="#c45134")
         self.label_temperature_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-
         # create pressure frame
         self.pressure_frame = customtkinter.CTkFrame(self)
         self.pressure_frame.grid(row=1, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nwes")
@@ -218,9 +200,8 @@ class App(customtkinter.CTk):
 
         self.label_pressure = customtkinter.CTkLabel(master=self.pressure_frame, text="Pressure (in Hg)")
         self.label_pressure.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-        self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure, font=customtkinter.CTkFont(size=40, weight="bold"))
+        self.label_pressure_value = customtkinter.CTkLabel(master=self.pressure_frame, textvariable=self.pressure, font=customtkinter.CTkFont(size=40, weight="bold"), text_color="#5e9720")
         self.label_pressure_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="")
-
         # create humidity frame
         self.humidity_frame = customtkinter.CTkFrame(self)
         self.humidity_frame.grid(row=3, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nwes")
@@ -228,9 +209,8 @@ class App(customtkinter.CTk):
 
         self.label_humidity = customtkinter.CTkLabel(master=self.humidity_frame, text="Humidity (%)")
         self.label_humidity.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-        self.label_humidity_value = customtkinter.CTkLabel(master=self.humidity_frame, textvariable=self.humidity, font=customtkinter.CTkFont(size=40, weight="bold"))
+        self.label_humidity_value = customtkinter.CTkLabel(master=self.humidity_frame, textvariable=self.humidity, font=customtkinter.CTkFont(size=40, weight="bold"), text_color="#029cff")
         self.label_humidity_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
-
         # create checkbox and switch frame
         self.luminosity_frame = customtkinter.CTkFrame(self)
         self.luminosity_frame.grid(row=4, column=3, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nwes")
@@ -238,30 +218,27 @@ class App(customtkinter.CTk):
 
         self.label_luminosity = customtkinter.CTkLabel(master=self.luminosity_frame, text="Luminosity (lx)")
         self.label_luminosity.grid(row=0, column=2, columnspan=1, padx=10, pady=10, sticky="")
-        self.label_luminosity_value = customtkinter.CTkLabel(master=self.luminosity_frame, textvariable=self.luminosity, font=customtkinter.CTkFont(size=40, weight="bold"))
+        self.label_luminosity_value = customtkinter.CTkLabel(master=self.luminosity_frame, textvariable=self.luminosity, font=customtkinter.CTkFont(size=40, weight="bold"), text_color="#fed981")
         self.label_luminosity_value.grid(row=1, column=2, columnspan=1, padx=10, pady=10, sticky="e")
 
+        self.temp()  # call the temp function just once
 
-        # self.temp()  # call the temp function just once
-    #
-    # def temp(self):
-    #     current_temp, current_pres, current_hum, current_lum = self.current()
-    #     self.temperature.set(current_temp)
-    #     self.pressure.set(current_pres)
-    #     self.humidity.set(current_hum)
-    #     self.luminosity.set(current_lum)
-    #     self.after(1000, self.temp)  # 2000 milliseconds = 2 seconds
-    #
-    # def current(self):
-    #     while True:
-    #         current_temp = round(bme680.temperature, 2)
-    #         current_pres = round(bme680.pressure * 0.030, 2)
-    #         current_hum =  round(bme680.humidity, 2)
-    #         current_lum = round(veml7700.light, 2)
-    #         print(f'{current_temp},{current_pres}, {current_hum}, {current_lum}')
-    #         return current_temp, current_pres, current_hum, current_lum
+    def temp(self):
+        current_temp, current_pres, current_hum, current_lum = self.current()
+        self.temperature.set(current_temp)
+        self.pressure.set(current_pres)
+        self.humidity.set(current_hum)
+        self.luminosity.set(current_lum)
+        self.after(1000, self.temp)  # 2000 milliseconds = 2 seconds
 
-
+    def current(self):
+        while True:
+            current_temp = round(bme680.temperature, 2)
+            current_pres = round(bme680.pressure * 0.030, 2)
+            current_hum =  round(bme680.humidity, 2)
+            current_lum = round(veml7700.light, 2)
+            print(f'{current_temp},{current_pres}, {current_hum}, {current_lum}')
+            return current_temp, current_pres, current_hum, current_lum
 
 
     def key_pressed(self, event):
@@ -282,19 +259,19 @@ class App(customtkinter.CTk):
 
     def motion_event_start(self, event, button):
         if button == "W":
-            # kit1.motor1.throttle = 1
-            # kit2.motor1.throttle = 1
+            kit1.motor1.throttle = 1
+            kit2.motor1.throttle = 1
             print(f"{button} Pressed")
         elif button == "S":
-            # kit1.motor1.throttle = -1
-            # kit2.motor1.throttle = -1
+            kit1.motor1.throttle = -1
+            kit2.motor1.throttle = -1
 
             print(f"{button} Pressed")
 
     def motion_event_stop(self, event, button):
         print(f"{button} Released")
-        # kit1.motor1.throttle = 0
-        # kit2.motor1.throttle = 0
+        kit1.motor1.throttle = 0
+        kit2.motor1.throttle = 0
 
     #########################################################################
     # LED Switch
@@ -303,11 +280,11 @@ class App(customtkinter.CTk):
     def led_switch(self, event=None):
         if self.is_on:
             print("LED on")
-            # GPIO.output(rc1, False)
+            GPIO.output(rc1, False)
             self.is_on = False
         else:
             print("LED off")
-            # GPIO.output(rc1, True)
+            GPIO.output(rc1, True)
             self.is_on = True
 
     #########################################################################
@@ -317,50 +294,46 @@ class App(customtkinter.CTk):
     def lights_switch(self, event=None):
         if self.is_on:
             print("Lights on")
-            # GPIO.output(rc2, False)
+            GPIO.output(rc2, False)
             self.is_on = False
         else:
             print("Lights off")
-            # GPIO.output(rc2, True)
+            GPIO.output(rc2, True)
             self.is_on = True
 
-    # #########################################################################
-    # # Camera Switch
-    # #########################################################################
-    # def camera_switch(self, event=None):
-    #     if self.is_on:
-    #         self.capture = cv2.VideoCapture(0)
-    #         print("Cam on")
-    #         self.is_on = False
-    #         self.update_frames()
-    #     else:
-    #         self.close_camera()
-    #         self.image
-    #         print("Cam off")
-    #
-    #         self.is_on = True
-    #
-    # def update_frames(self):
-    #
-    #     # Change the frame by the initial image and breaks the loop
-    #     if self.is_on:
-    #         self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
-    #         return
-    #     else:
-    #
-    #         _, frame = self.capture.read()
-    #
-    #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    #
-    #     frame = Image.fromarray(frame)
-    #     frame = ImageTk.PhotoImage(frame)
-    #
-    #     self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
-    #     self.picam_canvas.image = frame
-    #
-    #     self.picam_canvas.after(1, self.update_frames)
-    # def close_camera(self):
-    #     self.capture.release()
+    #########################################################################
+    # Camera Switch
+    #########################################################################
+    def camera_switch(self, event=None):
+        if self.is_on:
+            self.capture = cv2.VideoCapture(0)
+            print("Cam on")
+            self.is_on = False
+            self.update_frames()
+        else:
+            self.close_camera()
+            self.image
+            print("Cam off")
+
+            self.is_on = True
+
+    def update_frames(self):
+        # Change the frame by the initial image and breaks the loop
+        if self.is_on:
+            self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
+            return
+        else:
+            _, frame = self.capture.read()
+
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = Image.fromarray(frame)
+        frame = ImageTk.PhotoImage(frame)
+        self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
+        self.picam_canvas.image = frame
+        self.picam_canvas.after(1, self.update_frames)
+
+    def close_camera(self):
+        self.capture.release()
 
 
 if __name__ == "__main__":
