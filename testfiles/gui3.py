@@ -3,6 +3,12 @@ import tkinter.messagebox
 import customtkinter
 import cv2
 from PIL import Image,ImageTk
+
+import socket as sc
+import time
+from playsound import playsound
+
+
 # import board
 # from adafruit_motorkit import MotorKit
 # import RPi.GPIO as GPIO
@@ -61,7 +67,11 @@ class App(customtkinter.CTk):
         self.humidity.set(97)
         self.luminosity.set(2102)
         self.image = ImageTk.PhotoImage(Image.open("../data/CoolBlue.png"))
-        self.logoimg = ImageTk.PhotoImage(Image.open("../data/logo.png"))
+        self.logoimg = ImageTk.PhotoImage(Image.open("../data/power.png"))
+        self.systemonline = '../data/SysOnline.mp3'
+        self.visionenabled = '../data/NanoVision.mp3'
+        self.socket = sc.socket(sc.AF_INET, sc.SOCK_STREAM)
+        self.socket.connect(('192.168.2.88', 12345))
 
 
         #self.temperature.set(f'{50}\N{DEGREE CELSIUS}')
@@ -166,9 +176,25 @@ class App(customtkinter.CTk):
         self.logo_frame.grid(row=4, column=0, rowspan = 1, padx=(5, 5), pady=(10, 10), sticky="nsew")
         self.logo_frame.grid_rowconfigure(1, weight=1)
 
-        self.logo_canvas = customtkinter.CTkCanvas(self.logo_frame, width=400, height=220, background="#2b2b2b",  highlightthickness=1, highlightbackground="#2b2b2b")
-        self.logo_canvas.create_image(0, 0, image=self.logoimg, anchor="nw")
-        self.logo_canvas.pack()
+        self.button_powerup = customtkinter.CTkButton(self.logo_frame, text="              Connect            ",  height=10, width=10, )
+        self.button_powerup.grid(row=1, column=1, padx=20, pady=10, ipadx=10, ipady=10)
+        self.button_powerup.bind('<ButtonPress-1>', lambda x: self.server())
+
+
+        # create slider and progressbar frame
+        self.slider_progressbar_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+        self.slider_progressbar_frame.grid(row=4, column=1, columnspan=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        self.slider_progressbar_frame.grid_columnconfigure(0, weight=1)
+        self.slider_progressbar_frame.grid_rowconfigure(4, weight=1)
+
+        self.progressbar_1 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
+        self.progressbar_1.grid(row=2, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
+
+        self.progressbar_1.configure(mode="indeterminnate")
+        #self.progressbar_1.start()
+        # self.logo_canvas = customtkinter.CTkCanvas(self.logo_frame, width=400, height=220, background="#2b2b2b",  highlightthickness=1, highlightbackground="#2b2b2b")
+        # self.logo_canvas.create_image(0, 0, image=self.logoimg, anchor="nw")
+        # self.logo_canvas.pack()
 
         ###################################################################
         # Create canvas for RPCam live stream
@@ -310,6 +336,7 @@ class App(customtkinter.CTk):
             print("Cam on")
             self.is_on = False
             self.update_frames()
+            playsound(self.visionenabled)
         else:
             self.close_camera()
             self.image
@@ -334,6 +361,12 @@ class App(customtkinter.CTk):
 
     def close_camera(self):
         self.capture.release()
+
+    def server(self):
+        socket = sc.socket(sc.AF_INET, sc.SOCK_STREAM)
+        socket.connect(('192.168.2.88', 12345))
+        playsound('../data/SysOnline.mp3')
+        self.progressbar_1.start()
 
 
 if __name__ == "__main__":

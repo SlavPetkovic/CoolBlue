@@ -14,10 +14,10 @@ class App(customtkinter.CTk):
         # configure window
         self.is_on = True
         self.image = ImageTk.PhotoImage(Image.open("../data/Mars.png"))
-        self.capture = cv2.VideoCapture(-1)
+        self.capture = cv2.VideoCapture(0)
 
         self.title("Cool Blue")
-        self.geometry(f"{800}x{600}")
+        self.geometry(f"{1200}x{635}")
 
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
@@ -42,7 +42,7 @@ class App(customtkinter.CTk):
         self.picam_frame.grid(row=0, column=1, rowspan=4, padx=(5, 5), pady=(10, 10), sticky="nsew")
         self.picam_frame.grid_rowconfigure(4, weight=1)
         # Camera Canvas
-        self.picam_canvas = tkinter.Canvas(self.picam_frame, width=800, height=600)
+        self.picam_canvas = tkinter.Canvas(self.picam_frame, width=1730, height=943,)
         self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
         self.picam_canvas.pack()
 
@@ -51,7 +51,20 @@ class App(customtkinter.CTk):
     #########################################################################
     def camera_switch(self, event=None):
         if self.is_on:
-            self.capture = cv2.VideoCapture(0)
+            self.capture = cv2.VideoCapture(0, cv2.CAP_DSHOW )
+            #codec = 0x47504A4D  # MJPG
+            # self.capture.set(cv2.CAP_PROP_FPS, 30.0)
+            # self.capture.set(cv2.CAP_PROP_FOURCC, codec)
+            # self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+            # self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+            self.capture.set(cv2.CAP_PROP_FPS, 30.0)
+            self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('m', 'j', 'p', 'g'))
+            self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc('M', 'J', 'P', 'G'))
+            self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+            self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
+
+
             print("Cam on")
             self.is_on = False
             self.update_frames()
@@ -66,13 +79,16 @@ class App(customtkinter.CTk):
         # Change the frame by the initial image and breaks the loop
         if self.is_on:
             self.picam_canvas.create_image(0, 0, image=self.image, anchor="nw")
+
             return
         else:
             _, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        #frame = cv2.resize(frame,dsize=(1920, 1080), fx=0, fy=0,  interpolation=cv2.INTER_CUBIC)
         frame = Image.fromarray(frame)
         frame = ImageTk.PhotoImage(frame)
-        self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
+        self.picam_canvas.create_image(0,0, image=frame, anchor="nw")
         self.picam_canvas.image = frame
         self.picam_canvas.after(1, self.update_frames)
     def close_camera(self):

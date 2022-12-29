@@ -1,13 +1,20 @@
-import socket
-
+import socket as sc
+import time
+from playsound import playsound
 # Create a socket and connect to the Raspberry Pi
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('192.168.2.88', 12345))
+socket = sc.socket(sc.AF_INET, sc.SOCK_STREAM)
+socket.connect(('192.168.2.88', 12345))
+print( "Systems Online")
+playsound('../data/SysOnline.mp3')
 
 
+while True:
+    # Send a command to turn the LED on
+    socket.send(b"ON")
+    time.sleep(5)
+    socket.send(b"OFF")
+    time.sleep(5)
 
-# Send a command to turn the LED on
-s.send(b"ON")
 
 # Close the connection
 
