@@ -332,7 +332,7 @@ class App(customtkinter.CTk):
     #########################################################################
     def camera_switch(self, event=None):
         if self.is_on:
-            self.capture = cv2.VideoCapture(0)
+            self.capture = cv2.VideoCapture(1)
             print("Cam on")
             self.is_on = False
             self.update_frames()
@@ -352,8 +352,10 @@ class App(customtkinter.CTk):
         else:
             _, frame = self.capture.read()
 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.resize(frame, dsize=(1920, 1080), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
         frame = Image.fromarray(frame)
+    
         frame = ImageTk.PhotoImage(frame)
         self.picam_canvas.create_image(0, 0, image=frame, anchor="nw")
         self.picam_canvas.image = frame

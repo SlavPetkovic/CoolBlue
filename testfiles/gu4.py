@@ -14,7 +14,7 @@ class App(customtkinter.CTk):
         # configure window
         self.is_on = True
         self.image = ImageTk.PhotoImage(Image.open("../data/Mars.png"))
-        self.capture = cv2.VideoCapture(0)
+        self.capture = cv2.VideoCapture(1)
 
         self.title("Cool Blue")
         self.geometry(f"{1200}x{635}")
@@ -83,9 +83,9 @@ class App(customtkinter.CTk):
             return
         else:
             _, frame = self.capture.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        #frame = cv2.resize(frame,dsize=(1920, 1080), fx=0, fy=0,  interpolation=cv2.INTER_CUBIC)
+        frame = cv2.resize(frame,dsize=(1920, 1080), fx=0, fy=0,  interpolation=cv2.INTER_CUBIC)
         frame = Image.fromarray(frame)
         frame = ImageTk.PhotoImage(frame)
         self.picam_canvas.create_image(0,0, image=frame, anchor="nw")
